@@ -1,0 +1,95 @@
+form:-
+private: System::Void search(System::Object^ sender, System::EventArgs^ e) {
+	sdisplay->Items->Clear();
+	label7->Text = "";
+	for (int i = 0; i < 1000; i++) {
+		b.st[i] = "";
+	}
+	b.ds = 0;
+	if (susn->Text == "")
+	{
+		MessageBox::Show("Enter Value Please.", "Error");
+	}
+	else
+	{
+		msclr::interop::marshal_context con;
+		s.usn = con.marshal_as<std::string>(susn->Text);
+		cout << s.usn << endl;
+		s.name = "";
+		s.marks = "";
+		s.attendance = "";
+		b.search(s);
+		if(b.flag==0) {
+				label7->Text = gcnew String(b.st[0].c_str());
+				return;
+		}
+		for (int i = 0; i < b.ds; i++) {
+			String^ s = "The result for search is :-";
+			sdisplay->Items->Add(s);
+			s="\t\tUSN:-"+gcnew String((b.sd[i].usn).c_str());
+			sdisplay->Items->Add(s);
+			s = "\t\tName:-" + gcnew String((b.sd[i].name).c_str());
+			sdisplay->Items->Add(s);
+			s = "\t\tMarks:-" + gcnew String((b.sd[i].marks).c_str());
+			sdisplay->Items->Add(s);
+			s = "\t\tAttendance:-" + gcnew String((b.sd[i].attendance).c_str());
+			sdisplay->Items->Add(s);
+
+		}
+		b.ds = 0;
+		susn->Text = "";
+	}
+}
+
+
+code:-
+
+void btree::search(student key) {
+	transform(key.usn.begin(), key.usn.end(), key.usn.begin(), ::toupper);
+	node* ptr = head;
+	ds = 0;
+	int x = 0;
+	flag = 0;
+	while (ptr != NULL) {
+
+		if (ptr->child[0] == NULL) {
+			for (int i = 0; i < ptr->size; i++) {
+				if ((case_insensitive_match(key.usn, ptr->value[i].usn))==1) {
+					transform(key.usn.begin(), key.usn.end(), key.usn.begin(), ::toupper);
+					cout << key.usn<<endl;
+					flag = 1;
+					sd[ds++] = ptr->value[i];
+					return;
+				}
+			}
+			break;
+		}
+		else
+		{
+			int i;
+			for (i = 0; i < ptr->size; i++) {
+				if (key.usn < ptr->value[i].usn) {
+					break;
+				}
+			}
+			ptr = ptr->child[i];
+			cout << x++ << "\t";
+			cout << "->";
+		}
+
+
+	}
+
+	st[0] = "usn not found";
+	return;
+}
+void btree::tree_view(node* n) {
+	cout << "|";
+	for (int i = 0; i < n->size; i++) {
+		cout << n->value[i];
+	}
+	cout << "|" << endl;
+	while (n != NULL) {}
+
+
+}
